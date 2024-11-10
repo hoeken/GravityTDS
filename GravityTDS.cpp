@@ -18,42 +18,40 @@
 #include "GravityTDS.h"
 
 GravityTDS::GravityTDS() {
-  this->temperature = 25.0;
-  this->aref = 5.0;
-  this->adcRange = 1024.0;
-  this->kValue = 1.0;
+  temperature = 25.0;
+  aref = 5.0;
+  adcRange = 10;
+  kValue = 1.0;
 }
 
 GravityTDS::~GravityTDS() {}
 
-void GravityTDS::setTemperature(float temp) { this->temperature = temp; }
+void GravityTDS::setTemperature(float temp) { temperature = temp; }
 
-void GravityTDS::setAref(float value) { this->aref = value; }
+void GravityTDS::setAref(float value) { aref = value; }
 
-void GravityTDS::setAdcRange(float range) { this->adcRange = range; }
+void GravityTDS::setAdcRange(byte range) { adcRange = range; }
 
 void GravityTDS::begin() {}
 
-float GravityTDS::getKvalue() { return this->kValue; }
+float GravityTDS::getKvalue() { kValue; }
 
-void GravityTDS::update(int reading) {
-  this->analogValue = reading;
-  this->voltage = this->analogValue / this->adcRange * this->aref;
-  this->ecValue =
-      (133.42 * this->voltage * this->voltage * this->voltage -
-       255.86 * this->voltage * this->voltage + 857.39 * this->voltage) *
-      this->kValue;
-  this->ecValue25 =
-      this->ecValue /
-      (1.0 + 0.02 * (this->temperature - 25.0)); // temperature compensation
-  this->tdsValue = ecValue25 * TdsFactor;
+void GravityTDS::update(int32_t reading) {
+  voltage = ((float)reading / (float)(1 << adcRange)) * aref;
+
+  ecValue = (133.42 * voltage * voltage * voltage - 255.86 * voltage * voltage +
+             857.39 * voltage) *
+            kValue;
+  ecValue25 =
+      ecValue / (1.0 + 0.02 * (temperature - 25.0)); // temperature compensation
+  tdsValue = ecValue25 * TdsFactor;
 }
 
 float GravityTDS::getTdsValue() { return tdsValue; }
 
 float GravityTDS::getEcValue() { return ecValue25; }
 
-void GravityTDS::setKvalue(float kvalue) { this->kValue = kvalue; }
+void GravityTDS::setKvalue(float kvalue) { kValue = kvalue; }
 
 // void GravityTDS::ecCalibration(byte mode) {
 //   char *cmdReceivedBufferPtr;

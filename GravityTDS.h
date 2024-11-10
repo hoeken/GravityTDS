@@ -29,10 +29,10 @@ public:
   ~GravityTDS();
 
   void begin();                    // initialization
-  void update(int reading);        // read and calculate
+  void update(int32_t reading);    // read and calculate
   void setTemperature(float temp); // temp of water
   void setAref(float value);       // reference voltage on ADC
-  void setAdcRange(float range);   // 1024 for 10bit ADC; 4096 for 12bit ADC
+  void setAdcRange(byte range);    // 1024 for 10bit ADC; 4096 for 12bit ADC
   void setKvalue(float kvalue);    // sets our k value
   float getKvalue();
   float getTdsValue();
@@ -41,12 +41,12 @@ public:
 private:
   int pin;
   float aref; // default 5.0V on Arduino UNO
-  float adcRange;
+  byte adcRange;
   float temperature;
 
   float kValue; // k value of the probe, you can calibrate in buffer solution
                 // such as 706.5ppm(1413us/cm)@25^C
-  float analogValue;
+  uint32_t analogValue;
   float voltage;
   float ecValue;   // before temperature compensation
   float ecValue25; // after temperature compensation
