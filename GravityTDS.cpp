@@ -34,7 +34,7 @@ void GravityTDS::setAdcRange(byte range) { adcRange = range; }
 
 void GravityTDS::begin() {}
 
-float GravityTDS::getKvalue() { kValue; }
+float GravityTDS::getKvalue() { return kValue; }
 
 void GravityTDS::update(int32_t reading) {
   voltage = ((float)reading / (float)(1 << adcRange)) * aref;
